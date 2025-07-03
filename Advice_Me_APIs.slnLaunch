@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "Advice_Me_APIs\\Advice_Me_APIs.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "AdviceMe.Admin\\AdviceMe.Admin.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

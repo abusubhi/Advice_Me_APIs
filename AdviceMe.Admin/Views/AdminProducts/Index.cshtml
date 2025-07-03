@@ -1,0 +1,37 @@
+﻿@model List<Advice_Me_APIs.Entities.Product>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Product Management</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.ProductID</td>
+                <td>@product.Name</td>
+                <td>@product.CategoryID</td>
+                <td>@product.Status</td>
+                <td>
+                    @if (product.Status != "Approved")
+                    {
+                        <a asp-action="Approve" asp-route-id="@product.ProductID">Approve</a>
+                    }
+                    <a asp-action="Delete" asp-route-id="@product.ProductID" style="color:red;">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

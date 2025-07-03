@@ -1,0 +1,36 @@
+﻿@model List<Advice_Me_APIs.Entities.Review>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Pending Reviews</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>ProductID</th>
+            <th>UserID</th>
+            <th>Rating</th>
+            <th>Review Text</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var review in Model)
+        {
+            <tr>
+                <td>@review.ReviewID</td>
+                <td>@review.ProductID</td>
+                <td>@review.UserID</td>
+                <td>@review.RatingStars</td>
+                <td>@review.TextReview</td>
+                <td>
+                    <a asp-action="Approve" asp-route-id="@review.ReviewID">Approve</a> |
+                    <a asp-action="Reject" asp-route-id="@review.ReviewID" style="color:red;">Reject</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
