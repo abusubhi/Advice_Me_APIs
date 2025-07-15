@@ -1,4 +1,5 @@
-﻿using Advice_Me_APIs.Entities;
+﻿using Advice_Me_APIs.DTOs;
+using Advice_Me_APIs.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -35,11 +36,11 @@ namespace AdviceMe.Admin.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var products = JsonConvert.DeserializeObject<List<Product>>(json);
+                var products = JsonConvert.DeserializeObject<List<ProductDTO>>(json);
                 return View(products);
             }
 
-            return View(new List<Product>());
+            return View(new List<ProductDTO>());
         }
 
         public async Task<IActionResult> Approve(int id)

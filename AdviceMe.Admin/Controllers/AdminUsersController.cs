@@ -1,4 +1,5 @@
 ﻿using Advice_Me_APIs.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -13,10 +14,11 @@ namespace AdviceMe.Admin.Controllers
             _clientFactory = clientFactory;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var client = _clientFactory.CreateClient("Advice_Me_APIs");
-            var response = await client.GetAsync("users");
+            var response = await client.GetAsync("Users/GetAllUsers");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();

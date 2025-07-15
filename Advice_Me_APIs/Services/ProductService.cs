@@ -22,6 +22,7 @@ namespace Advice_Me_APIs.Services
 
             var productDtoList = products.Select(item => new ProductDTO
             {
+                Id = item.ProductID,
                 Name = item.Name,
                 CategoryID = item.CategoryID,
                 ModelNumber = item.ModelNumber,
