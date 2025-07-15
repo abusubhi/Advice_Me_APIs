@@ -1,4 +1,5 @@
 ﻿using Advice_Me_APIs.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -26,11 +27,11 @@ namespace AdviceMe.Admin.Controllers
             }
             return client;
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var client = GetClientWithToken();
-            var response = await client.GetAsync("categories");
+            var response = await client.GetAsync("Categories/GetAllCategories");
 
             if (response.IsSuccessStatusCode)
             {

@@ -1,4 +1,5 @@
 ﻿using Advice_Me_APIs.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -25,10 +26,26 @@ namespace AdviceMe.Admin.Controllers
             return client;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var client = GetClientWithToken();
             var response = await client.GetAsync("reviews/pending");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var reviews = JsonConvert.DeserializeObject<List<Review>>(json);
+                return View(reviews);
+            }
+
+            return View(new List<Review>());
+        }
+
+        public async Task<IActionResult> GetReviewByProductId(int productId)
+        {
+            var client = GetClientWithToken();
+            var response = await client.GetAsync($"products/{productId}/reviews");
 
             if (response.IsSuccessStatusCode)
             {

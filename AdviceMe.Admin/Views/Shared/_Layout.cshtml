@@ -33,7 +33,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="AdminUsers" asp-action="Index">Users</a>
                         </li>
-                        <a href="/AdminAuth/Logout">Logout</a>
+                        @if(User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item ">
+                                <a asp-controller="AdminAuth" asp-action="Logout" class="nav-link btn btn-danger ">Logout</a>
+                            </li>
+                        }
+
+                        
                     </ul>
                 </div>
             </div>

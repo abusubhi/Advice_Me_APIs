@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Advice_Me_APIs.DTOs;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -29,43 +30,36 @@ namespace AdviceMe.Admin.Controllers
         {
             var client = _clientFactory.CreateClient("Advice_Me_APIs");
 
-            var loginData = new
-            {
-                Email = email,
-                Password = password
-            };
-
+            var loginData = new { Email = email, Password = password };
             var jsonContent = new StringContent(JsonConvert.SerializeObject(loginData), Encoding.UTF8, "application/json");
+
             var response = await client.PostAsync("auth/login", jsonContent);
 
             if (response.IsSuccessStatusCode)
             {
-                var token = await response.Content.ReadAsStringAsync();
-                HttpContext.Session.SetString("JwtToken", token);
+                var loginResult = await response.Content.ReadAsStringAsync();
+                var tokenObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(loginResult);
+                var token = tokenObj["token"];
 
-                // ✅ بعد نجاح الدخول، نرسل token ونجلب بيانات المستخدم
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                var userResponse = await client.GetAsync("auth/me"); // API يجب أن يوفر هذا
+
+                var userResponse = await client.GetAsync("auth/me");
 
                 if (userResponse.IsSuccessStatusCode)
                 {
                     var userJson = await userResponse.Content.ReadAsStringAsync();
-                    dynamic user = JsonConvert.DeserializeObject(userJson);
+                    var user = JsonConvert.DeserializeObject<GetCurrentUser>(userJson);
+                    string role = user.RoleName ?? "User";
 
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-                    string role = user.role ?? "User";
-
-                    // ✅ فقط Admin يمكنه الدخول للوحة التحكم
+                    // 👮‍♂️ التأكد من صلاحية الدخول
                     if (role != "Admin")
-                    {
                         return RedirectToAction("AccessDenied");
-                    }
 
                     var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, email),
                 new Claim(ClaimTypes.Role, role)
+
             };
 
                     var identity = new ClaimsIdentity(claims, "Cookies");
@@ -83,6 +77,7 @@ namespace AdviceMe.Admin.Controllers
             ViewBag.Error = "Login failed. Please check your email or password.";
             return View();
         }
+
 
 
         public IActionResult AccessDenied()

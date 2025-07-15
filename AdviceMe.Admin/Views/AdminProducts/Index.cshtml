@@ -1,4 +1,4 @@
-﻿@model List<Advice_Me_APIs.Entities.Product>
+﻿@model List<Advice_Me_APIs.DTOs.ProductDTO>
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,16 +20,16 @@
         @foreach (var product in Model)
         {
             <tr>
-                <td>@product.ProductID</td>
+                <td>@product.Id</td>
                 <td>@product.Name</td>
                 <td>@product.CategoryID</td>
-                <td>@product.Status</td>
+                <td>@product.ModelNumber</td>
                 <td>
-                    @if (product.Status != "Approved")
+                    @if (product.ModelNumber != "Approved")
                     {
-                        <a asp-action="Approve" asp-route-id="@product.ProductID">Approve</a>
+                        <a asp-action="Approve" asp-route-id="@product.Id">Approve</a>
                     }
-                    <a asp-action="Delete" asp-route-id="@product.ProductID" style="color:red;">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@product.Id" style="color:red;">Delete</a>
                 </td>
             </tr>
         }
